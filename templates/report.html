@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .server-section {
+            margin-top: 30px;
+        }
+        .server-name {
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .file-details {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Log Report</h1>
+
+    <!-- Ось основна таблиця з кількістю записів від кожного сервера -->
+    <table>
+        <thead>
+            <tr>
+                <th>Server</th>
+                <th>Sender</th>
+                <th>Entries</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for server, data in all_logs.items() %}
+            {% for sender, logs in data.logs.items() %}
+                <tr>
+                    <td>{{ server }}</td>
+                    <td>{{ sender }}</td>
+                    <td>{{ data.counts[sender] }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Розширений список файлів та інформації про час і дату -->
+    {% for server, data in all_logs.items() %}
+    <div class="server-section">
+        <div class="server-name">Details for Server: {{ server }}</div>
+        {% for sender, logs in data.logs.items() %}
+            <div class="file-details">
+                <strong>Sender: {{ sender }}</strong>
+                <ul>
+                    {% for log in logs %}
+                    <li>
+                        <strong>File:</strong> {{ log.filename }} <br>
+                        <strong>Date:</strong> {{ log.date }} <br>
+                        <strong>Time:</strong> {{ log.time }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+</body>
+</html>
